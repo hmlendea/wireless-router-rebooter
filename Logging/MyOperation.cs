@@ -6,15 +6,7 @@ namespace WirelessRouterRebooter.Logging
     {
         MyOperation(string name) : base(name) { }
 
-        public static Operation CrashRecovery => new MyOperation(nameof(CrashRecovery));
-
-        public static Operation ConfigurationUpdate => new MyOperation(nameof(ConfigurationUpdate));
-
-        public static Operation ConnectivityTest => new MyOperation(nameof(ConnectivityTest));
-
-        public static Operation BotStart => new MyOperation(nameof(BotStart));
-
-        public static Operation BotStop => new MyOperation(nameof(BotStop));
+        public static Operation ParseArguments => new MyOperation(nameof(ParseArguments));
 
         public static Operation LogIn => new MyOperation(nameof(LogIn));
 

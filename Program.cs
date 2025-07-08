@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using NuciCLI;
+using NuciCLI.Arguments;
 using NuciLog;
 using NuciLog.Configuration;
 using NuciLog.Core;
@@ -12,6 +13,7 @@ using NuciWeb;
 using OpenQA.Selenium;
 
 using WirelessRouterRebooter.Configuration;
+using WirelessRouterRebooter.Logging;
 using WirelessRouterRebooter.Service;
 using WirelessRouterRebooter.Service.Models;
 using WirelessRouterRebooter.Service.Processors;
@@ -20,9 +22,6 @@ namespace WirelessRouterRebooter
 {
     public sealed class Program
     {
-        static readonly string[] UsernameOptions = ["-u", "--user", "--usr",  "--username"];
-        static readonly string[] PasswordOptions = ["-p", "--pass", "--pwd", "--password"];
-
         static BotSettings botSettings;
         static DebugSettings debugSettings;
         static NuciLoggerSettings loggingSettings;
@@ -57,37 +56,76 @@ namespace WirelessRouterRebooter
             logger = serviceProvider.GetService<ILogger>();
             logger.Info(Operation.StartUp, $"Application started");
 
-            UserCredentials userCredentials = new()
-            {
-                Username = CliArgumentsReader.GetOptionValue(args, UsernameOptions),
-                Password = CliArgumentsReader.GetOptionValue(args, PasswordOptions)
-            };
+            UserCredentials userCredentials = RetrieveCredentials(args);
 
             Run(serviceProvider, userCredentials);
         }
 
-        static void Run(IServiceProvider serviceProvider, UserCredentials userCredentials)
+        static UserCredentials RetrieveCredentials(string[] args)
         {
-            IBotService botService = serviceProvider.GetService<IBotService>();
+            logger.Info(
+                MyOperation.ParseArguments,
+                OperationStatus.Started,
+                "Parsing the command line arguments");
+
+            UserCredentials credentials;
 
             try
             {
-                botService.Run(userCredentials);
-            }
-            catch (AggregateException ex)
-            {
-                foreach (Exception innerException in ex.InnerExceptions)
+                ArgumentParser argumentsParser = new();
+                argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
+                argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
+
+                ArgumentsCollection arguments = argumentsParser.ParseArgs(args);
+
+                credentials = new()
                 {
-                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
-                }
+                    Username = arguments.Get<string>("username"),
+                    Password = arguments.Get<string>("password")
+                };
             }
             catch (Exception ex)
             {
-                logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
+                logger.Error(
+                    MyOperation.ParseArguments,
+                    OperationStatus.Failure,
+                    "Failed to parse the command line arguments",
+                    ex);
+
+                throw;
             }
 
-            webDriver.Quit();
+            logger.Debug(
+                MyOperation.ParseArguments,
+                OperationStatus.Success,
+                "Finished parsing the command line arguments",
+                new LogInfo(MyLogInfoKey.Username, credentials.Username));
+
+            return credentials;
         }
+
+        static void Run(IServiceProvider serviceProvider, UserCredentials userCredentials)
+            {
+                IBotService botService = serviceProvider.GetService<IBotService>();
+
+                try
+                {
+                    botService.Run(userCredentials);
+                }
+                catch (AggregateException ex)
+                {
+                    foreach (Exception innerException in ex.InnerExceptions)
+                    {
+                        logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
+                }
+
+                webDriver.Quit();
+            }
 
         static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", true, true)

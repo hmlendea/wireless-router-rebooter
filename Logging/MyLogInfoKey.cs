@@ -10,8 +10,6 @@ namespace WirelessRouterRebooter.Logging
 
         public static LogInfoKey Username => new MyLogInfoKey(nameof(Username));
 
-        public static LogInfoKey RetryDelay => new MyLogInfoKey(nameof(RetryDelay));
-
         public static LogInfoKey BrandName => new MyLogInfoKey(nameof(BrandName));
 
         public static LogInfoKey ModelName => new MyLogInfoKey(nameof(ModelName));
