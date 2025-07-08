@@ -1,5 +1,3 @@
-using System;
-
 using NuciWeb;
 using OpenQA.Selenium;
 using WirelessRouterRebooter.Service.Models;
@@ -30,10 +28,19 @@ namespace WirelessRouterRebooter.Service.Processors
         {
             webProcessor.Wait(5000);
 
-            webProcessor.Click(By.Id("c_mu25"));
+            for (int i = 0; i < 3; i++)
+            {
+                webProcessor.Click(By.Id("c_mu25"));
+                webProcessor.Wait(250);
+            }
 
             webProcessor.Wait(1000);
-            webProcessor.Click(By.Id("c_mu27"));
+
+            for (int i = 0; i < 3; i++)
+            {
+                webProcessor.Click(By.Id("c_mu27"));
+                webProcessor.Wait(250);
+            }
 
             webProcessor.Click(By.Id("c_rr14"));
         }

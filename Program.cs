@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Threading;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +12,6 @@ using NuciWeb;
 using OpenQA.Selenium;
 
 using WirelessRouterRebooter.Configuration;
-using WirelessRouterRebooter.Logging;
 using WirelessRouterRebooter.Service;
 using WirelessRouterRebooter.Service.Models;
 using WirelessRouterRebooter.Service.Processors;
@@ -25,8 +22,6 @@ namespace WirelessRouterRebooter
     {
         static readonly string[] UsernameOptions = ["-u", "--user", "--usr",  "--username"];
         static readonly string[] PasswordOptions = ["-p", "--pass", "--pwd", "--password"];
-
-        static TimeSpan RetryDelay => TimeSpan.FromMinutes(5);
 
         static BotSettings botSettings;
         static DebugSettings debugSettings;
@@ -74,54 +69,28 @@ namespace WirelessRouterRebooter
         static void Run(IServiceProvider serviceProvider, UserCredentials userCredentials)
         {
             IBotService botService = serviceProvider.GetService<IBotService>();
-            bool routerWasRebooted = false;
 
-            while (!routerWasRebooted)
+            try
             {
-                try
-                {
-                    botService.Run(userCredentials);
-                    routerWasRebooted = true;
-                }
-                catch (AggregateException ex)
-                {
-                    foreach (Exception innerException in ex.InnerExceptions)
-                    {
-                        logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
-                }
-
-                SaveCrashScreenshot();
-
-                logger.Info(
-                    MyOperation.CrashRecovery,
-                    new LogInfo(MyLogInfoKey.RetryDelay, RetryDelay.TotalMilliseconds));
-
-                Thread.Sleep((int)RetryDelay.TotalMilliseconds);
+                botService.Run(userCredentials);
             }
+            catch (AggregateException ex)
+            {
+                foreach (Exception innerException in ex.InnerExceptions)
+                {
+                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
+            }
+
+            webDriver.Quit();
         }
 
         static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", true, true)
             .Build();
-
-        static void SaveCrashScreenshot()
-        {
-            if (!debugSettings.IsCrashScreenshotEnabled)
-            {
-                return;
-            }
-
-            string directory = Path.GetDirectoryName(loggingSettings.LogFilePath);
-            string filePath = Path.Combine(directory, debugSettings.CrashScreenshotFileName);
-
-            ((ITakesScreenshot)webDriver)
-                .GetScreenshot()
-                .SaveAsFile(filePath);
-        }
     }
 }
