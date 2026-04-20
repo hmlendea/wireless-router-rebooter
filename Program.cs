@@ -3,13 +3,12 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using NuciCLI;
 using NuciCLI.Arguments;
 using NuciLog;
 using NuciLog.Configuration;
 using NuciLog.Core;
-using NuciWeb;
-
+using NuciWeb.Automation;
+using NuciWeb.Automation.Selenium;
 using OpenQA.Selenium;
 
 using WirelessRouterRebooter.Configuration;

@@ -1,5 +1,5 @@
 using NuciWeb;
-using OpenQA.Selenium;
+using NuciWeb.Automation;
 using WirelessRouterRebooter.Service.Models;
 
 namespace WirelessRouterRebooter.Service.Processors
@@ -18,10 +18,10 @@ namespace WirelessRouterRebooter.Service.Processors
 
             webProcessor.Wait(5000);
 
-            webProcessor.SetText(By.Name("loginUsername"), userCredentials.Username);
-            webProcessor.SetText(By.Name("loginPassword"), userCredentials.Password);
+            webProcessor.SetText(Select.ByName("loginUsername"), userCredentials.Username);
+            webProcessor.SetText(Select.ByName("loginPassword"), userCredentials.Password);
 
-            webProcessor.Click(By.Id("c_42"));
+            webProcessor.Click(Select.ById("c_42"));
         }
 
         public void Reboot()
@@ -30,7 +30,7 @@ namespace WirelessRouterRebooter.Service.Processors
 
             for (int i = 0; i < 3; i++)
             {
-                webProcessor.Click(By.Id("c_mu25"));
+                webProcessor.Click(Select.ById("c_mu25"));
                 webProcessor.Wait(250);
             }
 
@@ -38,11 +38,11 @@ namespace WirelessRouterRebooter.Service.Processors
 
             for (int i = 0; i < 3; i++)
             {
-                webProcessor.Click(By.Id("c_mu27"));
+                webProcessor.Click(Select.ById("c_mu27"));
                 webProcessor.Wait(250);
             }
 
-            webProcessor.Click(By.Id("c_rr14"));
+            webProcessor.Click(Select.ById("c_rr14"));
         }
     }
 }
