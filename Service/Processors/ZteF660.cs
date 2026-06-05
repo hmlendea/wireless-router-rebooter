@@ -16,33 +16,18 @@ namespace WirelessRouterRebooter.Service.Processors
         {
             webProcessor.GoToUrl($"http://{IpAddress}/");
 
-            webProcessor.Wait(5000);
+            webProcessor.SetText(Select.ById("Frm_Username"), userCredentials.Username);
+            webProcessor.SetText(Select.ById("Frm_Password"), userCredentials.Password);
 
-            webProcessor.SetText(Select.ByName("Frm_Username"), userCredentials.Username);
-            webProcessor.SetText(Select.ByName("Frm_Password"), userCredentials.Password);
-
-            webProcessor.Click(Select.ById("c_42"));
+            webProcessor.Click(Select.ById("LoginId"));
+            webProcessor.WaitForElementToDisappear(Select.ById("LoginId"));
         }
 
         public void Reboot()
         {
-            webProcessor.Wait(5000);
-
-            for (int i = 0; i < 3; i++)
-            {
-                webProcessor.Click(Select.ById("c_mu25"));
-                webProcessor.Wait(250);
-            }
-
-            webProcessor.Wait(1000);
-
-            for (int i = 0; i < 3; i++)
-            {
-                webProcessor.Click(Select.ById("c_mu27"));
-                webProcessor.Wait(250);
-            }
-
-            webProcessor.Click(Select.ById("c_rr14"));
+            webProcessor.GoToUrl($"http://{IpAddress}/getpage.gch?pid=1002&nextpage=manager_dev_conf_t.gch");
+            webProcessor.Click(Select.ById("Submit1"));
+            webProcessor.AcceptAlert();
         }
     }
 }

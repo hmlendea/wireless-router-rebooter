@@ -70,14 +70,14 @@ namespace WirelessRouterRebooter
             ArgumentParser argumentsParser = new();
             argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
             argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
-            argumentsParser.AddArgument("device", "The router device model (ch7465vf, f660)", false, "ch7465vf");
+            argumentsParser.AddArgument("router", "The router model (ch7465vf, f660)", false, "ch7465vf");
 
             return argumentsParser.ParseArgs(args);
         }
 
         static string ParseDeviceArgument(ArgumentsCollection arguments)
         {
-            string device = arguments.Get<string>("device").ToLowerInvariant();
+            string device = arguments.Get<string>("router").ToLowerInvariant();
 
             if (device != "ch7465vf" && device != "f660")
             {
