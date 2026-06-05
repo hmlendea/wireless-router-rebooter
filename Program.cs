@@ -50,7 +50,7 @@ namespace WirelessRouterRebooter
                 .AddSingleton(loggingSettings)
                 .AddSingleton<ILogger, NuciLogger>()
                 .AddSingleton(webDriver)
-                .AddTransient<IWebProcessor, WebProcessor>()
+                .AddTransient<IWebProcessor, SeleniumWebProcessor>()
                 .AddKeyedSingleton<IRouterProcessor, CompalCH7465VF>("ch7465vf")
                 .AddKeyedSingleton<IRouterProcessor, ZteF660>("f660")
                 .AddSingleton(sp => sp.GetRequiredKeyedService<IRouterProcessor>(deviceKey))
