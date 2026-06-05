@@ -19,6 +19,7 @@ A small .NET console utility that logs into a router web interface and triggers 
 Currently implemented:
 
 - Compal CH7465VF (default IP: `192.168.0.1`)
+- ZTE F660 (default IP: `192.168.1.1`)
 
 If your router model is different, you can add a new processor implementation under `Service/Processors`.
 

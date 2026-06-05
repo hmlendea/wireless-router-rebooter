@@ -21,28 +21,15 @@ namespace WirelessRouterRebooter.Service.Processors
             webProcessor.SetText(Select.ByName("loginUsername"), userCredentials.Username);
             webProcessor.SetText(Select.ByName("loginPassword"), userCredentials.Password);
 
-            webProcessor.Click(Select.ById("c_42"));
+            webProcessor.Click(Select.ById("LoginId"));
+            webProcessor.WaitForElementToBeVisible(Select.ById("mmStatu"));
         }
 
         public void Reboot()
         {
-            webProcessor.Wait(5000);
-
-            for (int i = 0; i < 3; i++)
-            {
-                webProcessor.Click(Select.ById("c_mu25"));
-                webProcessor.Wait(250);
-            }
-
-            webProcessor.Wait(1000);
-
-            for (int i = 0; i < 3; i++)
-            {
-                webProcessor.Click(Select.ById("c_mu27"));
-                webProcessor.Wait(250);
-            }
-
-            webProcessor.Click(Select.ById("c_rr14"));
+            webProcessor.Click(Select.ById("mmManager"));
+            webProcessor.Click(Select.ById("smSysMgr"));
+            webProcessor.Click(Select.ById("Submit1"));
         }
     }
 }
