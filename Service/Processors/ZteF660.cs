@@ -1,3 +1,4 @@
+using System;
 using NuciWeb;
 using NuciWeb.Automation;
 using WirelessRouterRebooter.Service.Models;
@@ -28,6 +29,7 @@ namespace WirelessRouterRebooter.Service.Processors
             webProcessor.GoToUrl($"http://{IpAddress}/getpage.gch?pid=1002&nextpage=manager_dev_conf_t.gch");
             webProcessor.Click(Select.ById("Submit1"));
             webProcessor.AcceptAlert();
+            webProcessor.Wait(TimeSpan.FromSeconds(3));
         }
     }
 }
