@@ -39,6 +39,9 @@ namespace WirelessRouterRebooter
             config.Bind(nameof(DebugSettings), debugSettings);
             config.Bind(nameof(NuciLoggerSettings), loggingSettings);
 
+            ArgumentsCollection arguments = ParseArguments(args);
+            string deviceKey = ParseDeviceArgument(arguments);
+
             webDriver = WebDriverInitialiser.InitialiseAvailableWebDriver(debugSettings.IsDebugMode);
 
             IServiceProvider serviceProvider = new ServiceCollection()
@@ -47,20 +50,44 @@ namespace WirelessRouterRebooter
                 .AddSingleton(loggingSettings)
                 .AddSingleton<ILogger, NuciLogger>()
                 .AddSingleton(webDriver)
-                .AddTransient<IWebProcessor, WebProcessor>()
-                .AddSingleton<IRouterProcessor, CompalCH7465VF>()
+                .AddTransient<IWebProcessor, SeleniumWebProcessor>()
+                .AddKeyedSingleton<IRouterProcessor, CompalCH7465VF>("ch7465vf")
+                .AddKeyedSingleton<IRouterProcessor, ZteF660>("f660")
+                .AddSingleton(sp => sp.GetRequiredKeyedService<IRouterProcessor>(deviceKey))
                 .AddSingleton<IBotService, BotService>()
                 .BuildServiceProvider();
 
             logger = serviceProvider.GetService<ILogger>();
             logger.Info(Operation.StartUp, $"Application started");
 
-            UserCredentials userCredentials = RetrieveCredentials(args);
+            UserCredentials userCredentials = RetrieveCredentials(arguments);
 
             Run(serviceProvider, userCredentials);
         }
 
-        static UserCredentials RetrieveCredentials(string[] args)
+        static ArgumentsCollection ParseArguments(string[] args)
+        {
+            ArgumentParser argumentsParser = new();
+            argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
+            argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
+            argumentsParser.AddArgument("router", "The router model (ch7465vf, f660)", false, "ch7465vf");
+
+            return argumentsParser.ParseArgs(args);
+        }
+
+        static string ParseDeviceArgument(ArgumentsCollection arguments)
+        {
+            string device = arguments.Get<string>("router").ToLowerInvariant();
+
+            if (device != "ch7465vf" && device != "f660")
+            {
+                throw new ArgumentException($"Unknown device '{device}'. Valid values are: ch7465vf, f660");
+            }
+
+            return device;
+        }
+
+        static UserCredentials RetrieveCredentials(ArgumentsCollection arguments)
         {
             logger.Info(
                 MyOperation.ParseArguments,
@@ -71,12 +98,6 @@ namespace WirelessRouterRebooter
 
             try
             {
-                ArgumentParser argumentsParser = new();
-                argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
-                argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
-
-                ArgumentsCollection arguments = argumentsParser.ParseArgs(args);
-
                 credentials = new()
                 {
                     Username = arguments.Get<string>("username"),
