@@ -119,7 +119,7 @@ dotnet run -- --username admin --password admin
 1. Create a new class implementing `IRouterProcessor` in `Service/Processors`.
 2. Implement:
 	 - `LogIn(RouterAccessInfo accessInfo)`
-	 - `Reboot(RouterAccessInfo accessInfo)`
+	 - `Reboot()`
 3. Register it in dependency injection in `Program.cs`.
 
 ## Release

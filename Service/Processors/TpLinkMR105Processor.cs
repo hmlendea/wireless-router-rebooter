@@ -33,7 +33,7 @@ namespace WirelessRouterRebooter.Service.Processors
         public override void Reboot()
         {
             webProcessor.Click(Select.ByXPath("//*[@id='topReboot']/span[@class='icon']"));
-            //webProcessor.Click(Select.ByXPath("//*[@id='alert-container']/div/div[@class='position-center-left']/div/div[@class='msg-btn-container']/div/div[2]/button"));
+            webProcessor.Click(Select.ByXPath("//*[@id='alert-container']/div/div[@class='position-center-left']/div/div[@class='msg-btn-container']/div/div[2]/button"));
             webProcessor.Wait(TimeSpan.FromSeconds(5));
         }
     }
