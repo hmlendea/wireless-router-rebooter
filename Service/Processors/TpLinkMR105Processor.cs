@@ -5,19 +5,16 @@ using WirelessRouterRebooter.Service.Models;
 
 namespace WirelessRouterRebooter.Service.Processors
 {
-    public sealed class TpLinkMR105Processor(IWebProcessor webProcessor) : IRouterProcessor
+    public sealed class TpLinkMR105Processor(
+        IWebProcessor webProcessor,
+        RouterAccessInfo accessInfo)
+        : RouterProcessor("TP-Link", "MR105", "192.168.0.1", accessInfo)
     {
-        public string BrandName => "TP-Link";
-
-        public string ModelName => "MR105";
-
-        public string IpAddress => "192.168.0.1";
-
-        public void LogIn(UserCredentials userCredentials)
+        public override void LogIn(RouterAccessInfo accessInfo)
         {
             webProcessor.GoToUrl($"http://{IpAddress}/");
 
-            webProcessor.SetText(Select.ById("pc-login-password"), userCredentials.Password);
+            webProcessor.SetText(Select.ById("pc-login-password"), accessInfo.Password);
 
             webProcessor.Click(Select.ById("pc-login-btn"));
 
@@ -33,10 +30,10 @@ namespace WirelessRouterRebooter.Service.Processors
             }
         }
 
-        public void Reboot()
+        public override void Reboot()
         {
             webProcessor.Click(Select.ByXPath("//*[@id='topReboot']/span[@class='icon']"));
-            webProcessor.Click(Select.ByXPath("//*[@id='alert-container']/div/div[@class='position-center-left']/div/div[@class='msg-btn-container']/div/div[2]/button"));
+            //webProcessor.Click(Select.ByXPath("//*[@id='alert-container']/div/div[@class='position-center-left']/div/div[@class='msg-btn-container']/div/div[2]/button"));
             webProcessor.Wait(TimeSpan.FromSeconds(5));
         }
     }

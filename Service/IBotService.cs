@@ -4,6 +4,6 @@ namespace WirelessRouterRebooter.Service
 {
     public interface IBotService
     {
-        void Run(UserCredentials userCredentials);
+        void Run(RouterAccessInfo accessInfo);
     }
 }

@@ -5,26 +5,23 @@ using WirelessRouterRebooter.Service.Models;
 
 namespace WirelessRouterRebooter.Service.Processors
 {
-    public sealed class ZteF660(IWebProcessor webProcessor) : IRouterProcessor
+    public sealed class ZteF660(
+        IWebProcessor webProcessor,
+        RouterAccessInfo accessInfo)
+        : RouterProcessor("ZTE", "F660", "192.168.1.1", accessInfo)
     {
-        public string BrandName => "ZTE";
-
-        public string ModelName => "F660";
-
-        public string IpAddress => "192.168.1.1";
-
-        public void LogIn(UserCredentials userCredentials)
+        public override void LogIn(RouterAccessInfo accessInfo)
         {
             webProcessor.GoToUrl($"http://{IpAddress}/");
 
-            webProcessor.SetText(Select.ById("Frm_Username"), userCredentials.Username);
-            webProcessor.SetText(Select.ById("Frm_Password"), userCredentials.Password);
+            webProcessor.SetText(Select.ById("Frm_Username"), accessInfo.Username);
+            webProcessor.SetText(Select.ById("Frm_Password"), accessInfo.Password);
 
             webProcessor.Click(Select.ById("LoginId"));
             webProcessor.WaitForElementToDisappear(Select.ById("LoginId"));
         }
 
-        public void Reboot()
+        public override void Reboot()
         {
             webProcessor.GoToUrl($"http://{IpAddress}/getpage.gch?pid=1002&nextpage=manager_dev_conf_t.gch");
             webProcessor.Click(Select.ById("Submit1"));

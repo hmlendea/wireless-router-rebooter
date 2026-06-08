@@ -4,27 +4,24 @@ using WirelessRouterRebooter.Service.Models;
 
 namespace WirelessRouterRebooter.Service.Processors
 {
-    public sealed class CompalCH7465VF(IWebProcessor webProcessor) : IRouterProcessor
+    public sealed class CompalCH7465VF(
+        IWebProcessor webProcessor,
+        RouterAccessInfo accessInfo)
+        : RouterProcessor("Compal", "CH7465VF", "192.168.0.1", accessInfo)
     {
-        public string BrandName => "Compal";
-
-        public string ModelName => "CH7465VF";
-
-        public string IpAddress => "192.168.0.1";
-
-        public void LogIn(UserCredentials userCredentials)
+        public override void LogIn(RouterAccessInfo accessInfo)
         {
             webProcessor.GoToUrl($"http://{IpAddress}/");
 
             webProcessor.Wait(5000);
 
-            webProcessor.SetText(Select.ByName("loginUsername"), userCredentials.Username);
-            webProcessor.SetText(Select.ByName("loginPassword"), userCredentials.Password);
+            webProcessor.SetText(Select.ByName("loginUsername"), accessInfo.Username);
+            webProcessor.SetText(Select.ByName("loginPassword"), accessInfo.Password);
 
             webProcessor.Click(Select.ById("c_42"));
         }
 
-        public void Reboot()
+        public override void Reboot()
         {
             webProcessor.Wait(5000);
 

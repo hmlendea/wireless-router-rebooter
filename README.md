@@ -50,16 +50,20 @@ If arguments are omitted, the defaults are:
 
 - Username: `admin`
 - Password: `admin`
+- IP: empty (use processor default IP)
+- Router: `ch7465vf`
 
 ## Command-Line Arguments
 
 - `--username`: router login username
 - `--password`: router login password
+- `--ip`: optional custom router IP address; overrides the router model default when set
+- `--router`: router model (`ch7465vf`, `f660`, `tl-mr105`)
 
 Example:
 
 ```bash
-dotnet run --project WirelessRouterRebooter.csproj -- --username myuser --password mypass
+dotnet run --project WirelessRouterRebooter.csproj -- --username myuser --password mypass --router f660 --ip 192.168.1.1
 ```
 
 ## Configuration
@@ -114,8 +118,8 @@ dotnet run -- --username admin --password admin
 
 1. Create a new class implementing `IRouterProcessor` in `Service/Processors`.
 2. Implement:
-	 - `LogIn(UserCredentials userCredentials)`
-	 - `Reboot()`
+	 - `LogIn(RouterAccessInfo accessInfo)`
+	 - `Reboot(RouterAccessInfo accessInfo)`
 3. Register it in dependency injection in `Program.cs`.
 
 ## Release

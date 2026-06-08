@@ -10,7 +10,7 @@ namespace WirelessRouterRebooter.Service.Processors
 
         string IpAddress { get; }
 
-        void LogIn(UserCredentials userCredentials);
+        void LogIn(RouterAccessInfo accessInfo);
 
         void Reboot();
     }
