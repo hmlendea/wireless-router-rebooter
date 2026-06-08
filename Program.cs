@@ -52,6 +52,7 @@ namespace WirelessRouterRebooter
                 .AddSingleton(webDriver)
                 .AddTransient<IWebProcessor, SeleniumWebProcessor>()
                 .AddKeyedSingleton<IRouterProcessor, CompalCH7465VF>("ch7465vf")
+                .AddKeyedSingleton<IRouterProcessor, TpLinkMR105Processor>("tl-mr105")
                 .AddKeyedSingleton<IRouterProcessor, ZteF660>("f660")
                 .AddSingleton(sp => sp.GetRequiredKeyedService<IRouterProcessor>(deviceKey))
                 .AddSingleton<IBotService, BotService>()
@@ -70,7 +71,7 @@ namespace WirelessRouterRebooter
             ArgumentParser argumentsParser = new();
             argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
             argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
-            argumentsParser.AddArgument("router", "The router model (ch7465vf, f660)", false, "ch7465vf");
+            argumentsParser.AddArgument("router", "The router model (ch7465vf, f660, tl-mr105)", false, "ch7465vf");
 
             return argumentsParser.ParseArgs(args);
         }
@@ -79,9 +80,11 @@ namespace WirelessRouterRebooter
         {
             string device = arguments.Get<string>("router").ToLowerInvariant();
 
-            if (device != "ch7465vf" && device != "f660")
+            if (device != "ch7465vf" &&
+                device != "f660" &&
+                device != "tl-mr105")
             {
-                throw new ArgumentException($"Unknown device '{device}'. Valid values are: ch7465vf, f660");
+                throw new ArgumentException($"Unknown device '{device}'. Valid values are: ch7465vf, f660, tl-mr105");
             }
 
             return device;
