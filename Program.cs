@@ -40,6 +40,7 @@ namespace WirelessRouterRebooter
             config.Bind(nameof(NuciLoggerSettings), loggingSettings);
 
             ArgumentsCollection arguments = ParseArguments(args);
+            RouterAccessInfo accessInfo = RetrieveAccessInfo(arguments);
             string deviceKey = ParseDeviceArgument(arguments);
 
             webDriver = WebDriverInitialiser.InitialiseAvailableWebDriver(debugSettings.IsDebugMode);
@@ -48,6 +49,7 @@ namespace WirelessRouterRebooter
                 .AddSingleton(botSettings)
                 .AddSingleton(debugSettings)
                 .AddSingleton(loggingSettings)
+                .AddSingleton(accessInfo)
                 .AddSingleton<ILogger, NuciLogger>()
                 .AddSingleton(webDriver)
                 .AddTransient<IWebProcessor, SeleniumWebProcessor>()
@@ -61,9 +63,7 @@ namespace WirelessRouterRebooter
             logger = serviceProvider.GetService<ILogger>();
             logger.Info(Operation.StartUp, $"Application started");
 
-            UserCredentials userCredentials = RetrieveCredentials(arguments);
-
-            Run(serviceProvider, userCredentials);
+            Run(serviceProvider, accessInfo);
         }
 
         static ArgumentsCollection ParseArguments(string[] args)
@@ -71,6 +71,7 @@ namespace WirelessRouterRebooter
             ArgumentParser argumentsParser = new();
             argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
             argumentsParser.AddArgument("password", "The password for the router login", false, "admin");
+            argumentsParser.AddArgument("ip", "The custom router IP address", false, "");
             argumentsParser.AddArgument("router", "The router model (ch7465vf, f660, tl-mr105)", false, "ch7465vf");
 
             return argumentsParser.ParseArgs(args);
@@ -90,50 +91,23 @@ namespace WirelessRouterRebooter
             return device;
         }
 
-        static UserCredentials RetrieveCredentials(ArgumentsCollection arguments)
+        static RouterAccessInfo RetrieveAccessInfo(ArgumentsCollection arguments)
         {
-            logger.Info(
-                MyOperation.ParseArguments,
-                OperationStatus.Started,
-                "Parsing the command line arguments");
-
-            UserCredentials credentials;
-
-            try
+            return new RouterAccessInfo
             {
-                credentials = new()
-                {
-                    Username = arguments.Get<string>("username"),
-                    Password = arguments.Get<string>("password")
-                };
-            }
-            catch (Exception ex)
-            {
-                logger.Error(
-                    MyOperation.ParseArguments,
-                    OperationStatus.Failure,
-                    "Failed to parse the command line arguments",
-                    ex);
-
-                throw;
-            }
-
-            logger.Debug(
-                MyOperation.ParseArguments,
-                OperationStatus.Success,
-                "Finished parsing the command line arguments",
-                new LogInfo(MyLogInfoKey.Username, credentials.Username));
-
-            return credentials;
+                Username = arguments.Get<string>("username"),
+                Password = arguments.Get<string>("password"),
+                IpAddress = arguments.Get<string>("ip")
+            };
         }
 
-        static void Run(IServiceProvider serviceProvider, UserCredentials userCredentials)
+        static void Run(IServiceProvider serviceProvider, RouterAccessInfo accessInfo)
             {
                 IBotService botService = serviceProvider.GetService<IBotService>();
 
                 try
                 {
-                    botService.Run(userCredentials);
+                    botService.Run(accessInfo);
                 }
                 catch (AggregateException ex)
                 {

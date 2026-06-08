@@ -12,33 +12,35 @@ namespace WirelessRouterRebooter.Service
         IRouterProcessor routerProcessor,
         ILogger logger) : IBotService
     {
-        public void Run(UserCredentials userCredentials)
+        public void Run(RouterAccessInfo accessInfo)
         {
-            LogIn(userCredentials);
+            LogIn(accessInfo);
             Reboot();
         }
 
-        void LogIn(UserCredentials userCredentials)
+        void LogIn(RouterAccessInfo accessInfo)
         {
+            string ipAddress = accessInfo.GetIpAddressOrDefault(routerProcessor.IpAddress);
+
             logger.Info(
                 MyOperation.LogIn,
                 OperationStatus.Started,
-                new LogInfo(MyLogInfoKey.IpAddress, routerProcessor.IpAddress),
+                new LogInfo(MyLogInfoKey.IpAddress, ipAddress),
                 new LogInfo(MyLogInfoKey.BrandName, routerProcessor.BrandName),
                 new LogInfo(MyLogInfoKey.ModelName, routerProcessor.ModelName),
-                new LogInfo(MyLogInfoKey.Username, userCredentials.Username));
+                new LogInfo(MyLogInfoKey.Username, accessInfo.Username));
 
             try
             {
-                routerProcessor.LogIn(userCredentials);
+                routerProcessor.LogIn(accessInfo);
 
                 logger.Debug(
                     MyOperation.LogIn,
                     OperationStatus.Success,
-                    new LogInfo(MyLogInfoKey.IpAddress, routerProcessor.IpAddress),
+                    new LogInfo(MyLogInfoKey.IpAddress, ipAddress),
                     new LogInfo(MyLogInfoKey.BrandName, routerProcessor.BrandName),
                     new LogInfo(MyLogInfoKey.ModelName, routerProcessor.ModelName),
-                    new LogInfo(MyLogInfoKey.Username, userCredentials.Username));
+                    new LogInfo(MyLogInfoKey.Username, accessInfo.Username));
             }
             catch (Exception ex)
             {
@@ -46,10 +48,10 @@ namespace WirelessRouterRebooter.Service
                     MyOperation.LogIn,
                     OperationStatus.Failure,
                     ex,
-                    new LogInfo(MyLogInfoKey.IpAddress, routerProcessor.IpAddress),
+                    new LogInfo(MyLogInfoKey.IpAddress, ipAddress),
                     new LogInfo(MyLogInfoKey.BrandName, routerProcessor.BrandName),
                     new LogInfo(MyLogInfoKey.ModelName, routerProcessor.ModelName),
-                    new LogInfo(MyLogInfoKey.Username, userCredentials.Username));
+                    new LogInfo(MyLogInfoKey.Username, accessInfo.Username));
 
                 throw;
             }
