@@ -1,5 +1,5 @@
 using System;
-
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -115,10 +115,12 @@ namespace WirelessRouterRebooter
                     {
                         logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
                     }
+                    SaveCrashScreenshot();
                 }
                 catch (Exception ex)
                 {
                     logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
+                    SaveCrashScreenshot();
                 }
 
                 webDriver.Quit();
@@ -127,5 +129,20 @@ namespace WirelessRouterRebooter
         static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", true, true)
             .Build();
+
+        static void SaveCrashScreenshot()
+        {
+            if (!debugSettings.IsCrashScreenshotEnabled)
+            {
+                return;
+            }
+
+            string directory = Path.GetDirectoryName(loggingSettings.LogFilePath);
+            string filePath = Path.Combine(directory, debugSettings.CrashScreenshotFileName);
+
+            ((ITakesScreenshot)webDriver)
+                .GetScreenshot()
+                .SaveAsFile(filePath);
+        }
     }
 }
