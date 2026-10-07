@@ -139,7 +139,7 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
         public void Reboot_TotalClickCalls_1()
         {
             processor.Reboot();
-            webProcessorMock.Verify(w => w.Click(It.IsAny<Select>()), Times.Once);
+            webProcessorMock.Verify(w => w.Click(It.IsAny<string>()), Times.Once);
         }
     }
 }
