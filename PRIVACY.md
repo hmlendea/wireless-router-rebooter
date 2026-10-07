@@ -1,5 +1,3 @@
-<!-- BEGIN PRIVACY TEMPLATE IMMUTABLE -->
-
 # Privacy and Personal Data
 
 This document describes the personal data handling practices of the Wireless Router Rebooter console utility. The application is a self-hosted .NET tool that automates router reboots via local web interfaces. No data is transmitted to project maintainers or external services.
@@ -83,5 +81,3 @@ Update this document when application data flows, storage, integrations, or depl
 ## 📬 Contact
 
 For questions about application data handling, contact the project maintainers via the GitHub repository at https://github.com/hmlendea/wireless-router-rebooter. For a self-hosted instance, contact the instance operator. Include the router model and deployment context if relevant; do not send passwords, access tokens, or other secrets.
-
-<!-- END PRIVACY TEMPLATE IMMUTABLE -->
