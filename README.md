@@ -116,24 +116,66 @@ dotnet run -- --username admin --password admin
 
 ## Add Support for Another Router
 
-1. Create a new class implementing `IRouterProcessor` in `Service/Processors`.
-2. Implement:
-	 - `LogIn(RouterAccessInfo accessInfo)`
-	 - `Reboot()`
-3. Register it in dependency injection in `Program.cs`.
+See [docs/extending.md](docs/extending.md) for detailed steps.
+
+Summary:
+1. Create a new class in `Service/Processors/` inheriting from `RouterProcessor`
+2. Implement `LogIn(RouterAccessInfo)` and `Reboot()` using `IWebProcessor`
+3. Register in `Program.cs` with a unique keyed singleton key
+4. Add the key to `ParseDeviceArgument` validation
 
 ## Release
 
 A helper script exists for releases:
 
 ```bash
-./release.sh
+./release.sh [version]
 ```
+
+The script fetches and executes a shared release script from `hmlendea/deployment-scripts` that handles version bumping, tagging, GitHub release creation, and NuGet packaging.
+
+See [docs/build-and-release.md](docs/build-and-release.md) for details.
+
+## Architecture Overview
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for:
+- High-level component diagram
+- Data flow description
+- Key abstractions and interfaces
+- Router processor pattern
+- Configuration sections
+- Dependencies
+- Extensibility guide
+- Sequence diagram
+- Error handling strategy
+- Logging context keys
+- Thread safety
+- Deployment considerations
+
+## Detailed Documentation
+
+| Document | Description |
+|----------|-------------|
+| [docs/components/program.md](docs/components/program.md) | Entry point, DI configuration, argument parsing |
+| [docs/components/bot-service.md](docs/components/bot-service.md) | Orchestration layer, logging, error handling |
+| [docs/components/configuration.md](docs/components/configuration.md) | Settings classes, appsettings.json binding |
+| [docs/components/logging.md](docs/components/logging.md) | Custom LogInfoKey and Operation types |
+| [docs/components/web-automation.md](docs/components/web-automation.md) | IWebProcessor abstraction, Selenium integration |
+| [docs/processors/router-processor-base.md](docs/processors/router-processor-base.md) | Abstract base class, IP resolution |
+| [docs/processors/compal-ch7465vf.md](docs/processors/compal-ch7465vf.md) | Compal CH7465VF implementation |
+| [docs/processors/tplink-mr105.md](docs/processors/tplink-mr105.md) | TP-Link MR105 implementation |
+| [docs/processors/zte-f660.md](docs/processors/zte-f660.md) | ZTE F660 implementation |
+| [docs/extending.md](docs/extending.md) | Adding new router processors |
+| [docs/build-and-release.md](docs/build-and-release.md) | Build, test, release script, CI/CD |
+| [docs/configuration-reference.md](docs/configuration-reference.md) | Complete appsettings.json schema |
 
 ## Limitations
 
 - The current implementation targets the HTML structure of supported router firmware pages.
 - Firmware UI changes may require selector updates in router processors.
+- Only HTTP (not HTTPS) is supported for router admin panels.
+- No automatic log rotation; log file grows indefinitely.
+- Single-threaded console application; no parallel execution.
 
 ## License
 
