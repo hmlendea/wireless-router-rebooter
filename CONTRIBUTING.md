@@ -95,7 +95,7 @@ dotnet test --filter "FullyQualifiedName~TestSuiteName"
 
 ## Code of Conduct
 
-This project does not currently have a `CODE_OF_CONDUCT.md` file.
+This project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Security
 
