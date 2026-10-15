@@ -12,11 +12,12 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
 {
     public sealed class CompalCH7465VFTests
     {
-        private readonly Mock<IWebProcessor> webProcessorMock;
-        private readonly RouterAccessInfo accessInfo;
-        private readonly CompalCH7465VF processor;
+        private Mock<IWebProcessor> webProcessorMock = null!;
+        private RouterAccessInfo accessInfo = null!;
+        private CompalCH7465VF processor = null!;
 
-        public CompalCH7465VFTests()
+        [SetUp]
+        public void SetUp()
         {
             webProcessorMock = new Mock<IWebProcessor>();
             accessInfo = new RouterAccessInfo
@@ -113,10 +114,10 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
         }
 
         [Test]
-        public void Reboot_Waits250msBetweenMenuItem1Clicks()
+        public void Reboot_Waits250msBetweenMenuItemClicks()
         {
             processor.Reboot();
-            webProcessorMock.Verify(w => w.Wait(250), Times.Exactly(3));
+            webProcessorMock.Verify(w => w.Wait(250), Times.Exactly(6));
         }
 
         [Test]
@@ -134,10 +135,10 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
         }
 
         [Test]
-        public void Reboot_Waits250msBetweenMenuItem2Clicks()
+        public void Reboot_Waits250msBetweenMenuItemLoops()
         {
             processor.Reboot();
-            webProcessorMock.Verify(w => w.Wait(250), Times.Exactly(3));
+            webProcessorMock.Verify(w => w.Wait(250), Times.Exactly(6));
         }
 
         [Test]

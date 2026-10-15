@@ -14,11 +14,12 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
 {
     public sealed class ZteF660Tests
     {
-        private readonly Mock<IWebProcessor> webProcessorMock;
-        private readonly RouterAccessInfo accessInfo;
-        private readonly ZteF660 processor;
+        private Mock<IWebProcessor> webProcessorMock = null!;
+        private RouterAccessInfo accessInfo = null!;
+        private ZteF660 processor = null!;
 
-        public ZteF660Tests()
+        [SetUp]
+        public void SetUp()
         {
             webProcessorMock = new Mock<IWebProcessor>();
             accessInfo = new RouterAccessInfo

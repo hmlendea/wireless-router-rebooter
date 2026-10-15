@@ -10,11 +10,12 @@ namespace WirelessRouterRebooter.UnitTests.Service.Processors
 {
     public sealed class TpLinkMR105ProcessorTests
     {
-        private readonly Mock<IWebProcessor> _webProcessorMock;
-        private readonly RouterAccessInfo _accessInfo;
-        private readonly TpLinkMR105Processor _processor;
+        private Mock<IWebProcessor> _webProcessorMock = null!;
+        private RouterAccessInfo _accessInfo = null!;
+        private TpLinkMR105Processor _processor = null!;
 
-        public TpLinkMR105ProcessorTests()
+        [SetUp]
+        public void SetUp()
         {
             _webProcessorMock = new Mock<IWebProcessor>();
             _accessInfo = new RouterAccessInfo
