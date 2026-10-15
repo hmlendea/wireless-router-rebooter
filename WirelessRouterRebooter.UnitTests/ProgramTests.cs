@@ -182,7 +182,7 @@ namespace WirelessRouterRebooter.UnitTests
             var args = new ArgumentsCollection();
             args["router"] = "invalid";
             var ex = Assert.Throws<ArgumentException>(() => ParseDeviceArgument(args));
-            Assert.That(ex.Message, Does.Contain("Unknown device 'invalid'"));
+            Assert.That(ex!.Message, Does.Contain("Unknown device 'invalid'"));
             Assert.That(ex.Message, Does.Contain("ch7465vf"));
             Assert.That(ex.Message, Does.Contain("f660"));
             Assert.That(ex.Message, Does.Contain("tl-mr105"));
@@ -194,7 +194,7 @@ namespace WirelessRouterRebooter.UnitTests
             var args = new ArgumentsCollection();
             args["router"] = "";
             var ex = Assert.Throws<ArgumentException>(() => ParseDeviceArgument(args));
-            Assert.That(ex.Message, Does.Contain("Unknown device ''"));
+            Assert.That(ex!.Message, Does.Contain("Unknown device ''"));
         }
 
         private static string ParseDeviceArgument(ArgumentsCollection arguments)

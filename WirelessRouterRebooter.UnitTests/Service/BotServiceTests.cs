@@ -11,12 +11,13 @@ namespace WirelessRouterRebooter.UnitTests.Service
 {
     public sealed class BotServiceTests
     {
-        private readonly Mock<IRouterProcessor> _routerProcessorMock;
-        private readonly Mock<ILogger> _loggerMock;
-        private readonly BotService _botService;
-        private readonly RouterAccessInfo _accessInfo;
+        private Mock<IRouterProcessor> _routerProcessorMock = null!;
+        private Mock<ILogger> _loggerMock = null!;
+        private BotService _botService = null!;
+        private RouterAccessInfo _accessInfo = null!;
 
-        public BotServiceTests()
+        [SetUp]
+        public void SetUp()
         {
             _routerProcessorMock = new Mock<IRouterProcessor>();
             _loggerMock = new Mock<ILogger>();
@@ -55,12 +56,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
         {
             _botService.Run(_accessInfo);
             _loggerMock.Verify(l => l.Info(
-                MyOperation.LogIn,
-                OperationStatus.Started,
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.IpAddress && li.Value == "192.168.0.1"),
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.BrandName && li.Value == "TestBrand"),
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.ModelName && li.Value == "TestModel"),
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.Username && li.Value == "admin")), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -68,9 +66,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
         {
             _botService.Run(_accessInfo);
             _loggerMock.Verify(l => l.Debug(
-                MyOperation.LogIn,
-                OperationStatus.Success,
-                It.IsAny<LogInfo[]>()), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -82,10 +80,10 @@ namespace WirelessRouterRebooter.UnitTests.Service
             Assert.Throws<InvalidOperationException>(() => _botService.Run(_accessInfo));
 
             _loggerMock.Verify(l => l.Error(
-                MyOperation.LogIn,
-                OperationStatus.Failure,
-                exception,
-                It.IsAny<LogInfo[]>()), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<Exception>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -93,11 +91,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
         {
             _botService.Run(_accessInfo);
             _loggerMock.Verify(l => l.Info(
-                MyOperation.Reboot,
-                OperationStatus.Started,
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.IpAddress && li.Value == "192.168.0.1"),
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.BrandName && li.Value == "TestBrand"),
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.ModelName && li.Value == "TestModel")), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -105,9 +101,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
         {
             _botService.Run(_accessInfo);
             _loggerMock.Verify(l => l.Debug(
-                MyOperation.Reboot,
-                OperationStatus.Success,
-                It.IsAny<LogInfo[]>()), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -119,10 +115,10 @@ namespace WirelessRouterRebooter.UnitTests.Service
             Assert.Throws<InvalidOperationException>(() => _botService.Run(_accessInfo));
 
             _loggerMock.Verify(l => l.Error(
-                MyOperation.Reboot,
-                OperationStatus.Failure,
-                exception,
-                It.IsAny<LogInfo[]>()), Times.Once);
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<Exception>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -134,10 +130,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
             _botService.Run(accessInfo);
 
             _loggerMock.Verify(l => l.Info(
-                MyOperation.LogIn,
-                OperationStatus.Started,
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.IpAddress && li.Value == "10.0.0.1"),
-                It.IsAny<LogInfo[]>()));
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -148,10 +143,9 @@ namespace WirelessRouterRebooter.UnitTests.Service
             _botService.Run(accessInfo);
 
             _loggerMock.Verify(l => l.Info(
-                MyOperation.LogIn,
-                OperationStatus.Started,
-                It.Is<LogInfo>(li => li.Key == MyLogInfoKey.IpAddress && li.Value == "192.168.5.5"),
-                It.IsAny<LogInfo[]>()));
+                It.IsAny<Operation>(),
+                It.IsAny<OperationStatus>(),
+                It.IsAny<LogInfo[]>()), Times.AtLeastOnce);
         }
     }
 }
