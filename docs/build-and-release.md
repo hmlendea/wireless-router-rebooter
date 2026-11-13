@@ -168,17 +168,17 @@ No artifacts currently uploaded. Consider adding:
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `Microsoft.Extensions.Configuration` | 10.0.6 | Config binding |
-| `Microsoft.Extensions.Configuration.Binder` | 10.0.6 | Object binding |
-| `Microsoft.Extensions.Configuration.FileExtensions` | 10.0.6 | File config source |
-| `Microsoft.Extensions.Configuration.Json` | 10.0.6 | JSON config |
-| `Microsoft.Extensions.DependencyInjection` | 10.0.6 | DI container |
-| `NuciCLI.Arguments` | 1.0.1 | CLI parsing |
-| `NuciLog` | 1.2.0 | Logging |
-| `NuciLog.Core` | 2.6.2 | Logging core |
-| `NuciWeb` | 4.0.0 | Web automation core |
-| `NuciWeb.Automation` | 1.0.0 | Automation abstraction |
-| `NuciWeb.Automation.Selenium` | 1.0.2 | Selenium implementation |
+| `Microsoft.Extensions.Configuration` | 11.0.0 | Config binding |
+| `Microsoft.Extensions.Configuration.Binder` | 11.0.0 | Object binding |
+| `Microsoft.Extensions.Configuration.FileExtensions` | 11.0.0 | File config source |
+| `Microsoft.Extensions.Configuration.Json` | 11.0.0 | JSON config |
+| `Microsoft.Extensions.DependencyInjection` | 11.0.0 | DI container |
+| `NuciCLI.Arguments` | 1.0.2 | CLI parsing |
+| `NuciLog` | 1.2.3 | Logging |
+| `NuciLog.Core` | 3.1.1 | Logging core |
+| `NuciWeb` | 4.1.0 | Web automation core |
+| `NuciWeb.Automation` | 1.0.1 | Automation abstraction |
+| `NuciWeb.Automation.Selenium` | 1.0.3 | Selenium implementation |
 
 ### Updating Dependencies
 
