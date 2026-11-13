@@ -4,7 +4,6 @@
 
 - .NET SDK 10.0+
 - Git
-- Bash (for release script)
 
 ## Build Commands
 
@@ -66,52 +65,61 @@ dotnet test --filter "FullyQualifiedName~UnitTests"
 
 ## Release Process
 
-### Release Script
+Publishing a GitHub Release triggers the release workflow, which builds and uploads the release artefacts.
 
-**File:** `release.sh`
+### GitHub Release Workflow
 
-```bash
-#!/bin/bash
-DOTNET_VERSION="10.0"
-RELEASE_SCRIPT_URL="https://raw.githubusercontent.com/hmlendea/deployment-scripts/master/release/dotnet/${DOTNET_VERSION}.sh"
-wget --quiet -O - "${RELEASE_SCRIPT_URL}" | bash /dev/stdin ${@}
+**File:** `.github/workflows/github-release.yml`
+
+```yaml
+name: GitHub Release
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
 ```
 
-### Usage
+### What the Release Workflow Does
 
-```bash
-./release.sh [version]
-```
+1. Checks out the repository with full history
+2. Determines the .NET version from `WirelessRouterRebooter/WirelessRouterRebooter.csproj`
+3. Sets up the matching .NET SDK
+4. Derives the version from the release tag (stripping the `v` prefix)
+5. Normalises the `origin` remote URL to HTTPS
+6. Builds the release artefacts through the shared release script from `hmlendea/dotnet-release-scripts`
+7. Publishes the artefacts to the GitHub Release with `softprops/action-gh-release`
 
-- Fetches and executes shared release script from `hmlendea/deployment-scripts`
-- Handles version bumping, tagging, GitHub release creation, NuGet packaging
-- Arguments passed through to underlying script
+### Release Artefacts
 
-### What Release Script Does
+The shared release script publishes self-contained builds for the subsequent runtime identifiers and packages them as `wireless-router-rebooter_<version>_<rid>.zip`:
 
-1. Validates working directory clean
-2. Determines next version (or uses provided)
-3. Updates version in `.csproj` / `Directory.Build.props`
-4. Commits version bump
-5. Creates Git tag
-6. Pushes to origin
-7. Creates GitHub Release
-8. Builds NuGet package (if applicable)
-9. Publishes to NuGet.org (if configured)
+- `linux-arm`
+- `linux-arm64`
+- `linux-x64`
+- `osx-arm64`
+- `osx-x64`
+- `win-arm64`
+- `win-x64`
 
 ## CI/CD Pipeline
 
-**File:** `.github/workflows/dotnet.yml`
+**Files:** `.github/workflows/dotnet.yml`, `.github/workflows/github-release.yml`
 
 ### Triggers
-- Push to `master`
-- Pull request to `master`
+
+| Workflow | Triggers |
+|----------|----------|
+| `.github/workflows/dotnet.yml` | Push to `master`, pull request to `master` |
+| `.github/workflows/github-release.yml` | Published GitHub Release |
 
 ### Jobs
 
-| Job | Steps |
-|-----|-------|
-| `build` | Checkout → Setup .NET 10.0 → Restore → Build → Test |
+| Workflow | Job | Steps |
+|----------|-----|-------|
+| `.github/workflows/dotnet.yml` | `build` | Checkout → Setup .NET 10.0 → Restore → Build → Test |
+| `.github/workflows/github-release.yml` | `release` | Checkout → Determine .NET version → Setup .NET → Extract version → Normalise remote → Build artefacts → Publish release assets |
 
 ### Workflow Details
 
@@ -197,11 +205,13 @@ dotnet publish -c Release -r linux-x64 --self-contained false
 
 | RID | Platform |
 |-----|----------|
-| `linux-x64` | Linux x64 |
+| `linux-arm` | Linux ARM |
 | `linux-arm64` | Linux ARM64 |
-| `win-x64` | Windows x64 |
-| `osx-x64` | macOS x64 |
+| `linux-x64` | Linux x64 |
 | `osx-arm64` | macOS ARM64 |
+| `osx-x64` | macOS x64 |
+| `win-arm64` | Windows ARM64 |
+| `win-x64` | Windows x64 |
 
 ## Troubleshooting
 
@@ -216,10 +226,11 @@ dotnet publish -c Release -r linux-x64 --self-contained false
 - `debugSettings.isDebugMode: true` for visible browser
 - Check Selenium version compatibility
 
-### Release Script Fails
-- Verify `deployment-scripts` repo accessible
-- Check GitHub token permissions (for release creation)
-- Ensure git user configured
+### Release Workflow Fails
+- Verify the `hmlendea/dotnet-release-scripts` repository is accessible
+- Check that the release workflow has `contents: write` permission
+- Ensure the release tag is a semantic version prefixed with `v`
+- Confirm the release assets glob matches the artefacts in `WirelessRouterRebooter/bin/Release/`
 
 ## Adding Tests
 
