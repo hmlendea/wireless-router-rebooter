@@ -16,6 +16,7 @@ A small .NET console utility that logs into a router web interface and triggers 
 - [System Requirements](#system-requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [GitHub Actions](#github-actions)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
@@ -138,6 +139,13 @@ Example `appsettings.json`:
 	}
 }
 ```
+
+## ⚙️ GitHub Actions
+
+| Workflow | Purpose | What it does |
+|----------|---------|--------------|
+| [ .NET ](https://github.com/hmlendea/wireless-router-rebooter/blob/master/.github/workflows/dotnet.yml) | Continuous integration | Restores, builds, and tests the solution on every push to `master` and pull request targeting `master` |
+| [ GitHub Release ](https://github.com/hmlendea/wireless-router-rebooter/blob/master/.github/workflows/github-release.yml) | Release publication | Builds self-contained release artefacts for every supported runtime and uploads them to the published GitHub Release |
 
 ## 🏗️ Architecture
 
