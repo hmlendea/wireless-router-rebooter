@@ -105,13 +105,14 @@ The shared release script publishes self-contained builds for the subsequent run
 
 ## CI/CD Pipeline
 
-**Files:** `.github/workflows/dotnet.yml`, `.github/workflows/github-release.yml`
+**Files:** `.github/workflows/dotnet.yml`, `.github/workflows/security.yml`, `.github/workflows/github-release.yml`
 
 ### Triggers
 
 | Workflow | Triggers |
 |----------|----------|
 | `.github/workflows/dotnet.yml` | Push to `master`, pull request to `master` |
+| `.github/workflows/security.yml` | Push to `master`, pull request to `master`, weekly schedule (`0 0 * * 0`) |
 | `.github/workflows/github-release.yml` | Published GitHub Release |
 
 ### Jobs
@@ -119,6 +120,7 @@ The shared release script publishes self-contained builds for the subsequent run
 | Workflow | Job | Steps |
 |----------|-----|-------|
 | `.github/workflows/dotnet.yml` | `build` | Checkout → Setup .NET 10.0 → Restore → Build → Test |
+| `.github/workflows/security.yml` | `security-scan` | Checkout → Setup .NET 10.0 → Restore → Check for vulnerable packages → CodeQL init → Build → CodeQL analyse |
 | `.github/workflows/github-release.yml` | `release` | Checkout → Determine .NET version → Setup .NET → Extract version → Normalise remote → Build artefacts → Publish release assets |
 
 ### Workflow Details
@@ -148,6 +150,31 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 ```
+
+### Security Workflow
+
+**File:** `.github/workflows/security.yml`
+
+```yaml
+name: Security
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+```
+
+The workflow restores dependencies, reports vulnerable direct and transitive NuGet packages with `dotnet list package --vulnerable --include-transitive`, and uploads CodeQL `csharp` analysis results to GitHub Code Scanning. The `security-events: write` permission is required for that upload, so the repository must be public or use GitHub Advanced Security.
 
 ### Artifacts
 

@@ -1,6 +1,7 @@
 [![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
 [![Latest Release](https://img.shields.io/github/v/release/hmlendea/wireless-router-rebooter)](https://github.com/hmlendea/wireless-router-rebooter/releases/latest)
 [![Build Status](https://github.com/hmlendea/wireless-router-rebooter/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/wireless-router-rebooter/actions/workflows/dotnet.yml)
+[![Security Scan](https://github.com/hmlendea/wireless-router-rebooter/actions/workflows/security.yml/badge.svg)](https://github.com/hmlendea/wireless-router-rebooter/actions/workflows/security.yml)
 [![License](https://img.shields.io/github/license/hmlendea/wireless-router-rebooter)](https://github.com/hmlendea/wireless-router-rebooter/blob/master/LICENSE)
 
 # Wireless Router Rebooter
@@ -23,6 +24,7 @@ A small .NET console utility that logs into a router web interface and triggers 
 - [License](#license)
 - [Security](#security)
 - [Privacy](#privacy)
+- [Support](#support)
 
 ## ✨ Capabilities
 
@@ -145,6 +147,7 @@ Example `appsettings.json`:
 | Workflow | Purpose | What it does |
 |----------|---------|--------------|
 | [ .NET ](https://github.com/hmlendea/wireless-router-rebooter/blob/master/.github/workflows/dotnet.yml) | Continuous integration | Restores, builds, and tests the solution on every push to `master` and pull request targeting `master` |
+| [ Security ](https://github.com/hmlendea/wireless-router-rebooter/blob/master/.github/workflows/security.yml) | Security scanning | Runs CodeQL analysis for C# and checks for vulnerable NuGet packages on every push to `master`, pull request targeting `master`, and a weekly schedule |
 | [ GitHub Release ](https://github.com/hmlendea/wireless-router-rebooter/blob/master/.github/workflows/github-release.yml) | Release publication | Builds self-contained release artefacts for every supported runtime and uploads them to the published GitHub Release |
 
 ## 🏗️ Architecture
@@ -189,6 +192,10 @@ For information on reporting security vulnerabilities, see [SECURITY.md](./SECUR
 Wireless Router Rebooter is a self-hosted console application. The operator controls all configuration, local storage, logs, backups, access controls, retention, and request handling. The project maintainers do not operate any instance and do not receive any data from self-hosted deployments.
 
 For the detailed description of how the application handles privacy and personal data, see [PRIVACY.md](./PRIVACY.md).
+
+## 💬 Support
+
+For support, please [open an issue](https://github.com/hmlendea/wireless-router-rebooter/issues).
 
 ## 💝 Project Engagement
 

@@ -4,12 +4,13 @@ This document describes the security policy for Wireless Router Rebooter, a self
 
 ## 📑 Table of Contents
 
-- Supported Versions
-- Reporting a Vulnerability
-- Scope
-- Disclosure Policy
-- Safe Harbour
-- Recognition
+- [Supported Versions](#supported-versions)
+- [Reporting a Vulnerability](#reporting-a-vulnerability)
+- [Scope](#scope)
+- [Disclosure Policy](#disclosure-policy)
+- [Automated Security Scanning](#automated-security-scanning)
+- [Safe Harbour](#safe-harbour)
+- [Recognition](#recognition)
 
 ## 🛡️ Supported Versions
 
@@ -30,6 +31,8 @@ To report a vulnerability:
 - Contact the maintainers directly via the repository
 
 ## 📌 Scope
+
+The original maintainers are not responsible for changes, modifications, or security issues introduced by downstream forks.
 
 The subsequent report categories are in scope for this repository:
 - Credential handling and exposure in logs or memory
@@ -52,6 +55,14 @@ This project follows coordinated disclosure:
 2. A remediation plan is prepared and validated.
 3. Public disclosure is published after a fix, mitigation, or agreed risk decision is available.
 4. Credit is attributed in accordance with reporter preference and project policy.
+
+## 🔍 Automated Security Scanning
+
+This repository runs automated security scans on every push to `master`, on every pull request targeting `master`, and on a weekly schedule. The scan includes:
+- **CodeQL static analysis** For C# sources, using the default CodeQL query suite and uploaded to GitHub Code Scanning
+- **Vulnerable package detection** For direct and transitive NuGet dependencies, reported through `dotnet list package --vulnerable --include-transitive`
+
+Results are published to the [Security](https://github.com/hmlendea/wireless-router-rebooter/security) tab and the [Actions](https://github.com/hmlendea/wireless-router-rebooter/actions/workflows/security.yml) workflow page.
 
 ## 🧾 Safe Harbour
 
