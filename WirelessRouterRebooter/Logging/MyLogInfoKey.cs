@@ -4,8 +4,6 @@ namespace WirelessRouterRebooter.Logging
 {
     public sealed class MyLogInfoKey : LogInfoKey
     {
-        MyLogInfoKey(string name) : base(name) { }
-
         public static LogInfoKey RouterProcessor => new MyLogInfoKey(nameof(RouterProcessor));
 
         public static LogInfoKey Username => new MyLogInfoKey(nameof(Username));
@@ -15,5 +13,7 @@ namespace WirelessRouterRebooter.Logging
         public static LogInfoKey ModelName => new MyLogInfoKey(nameof(ModelName));
 
         public static LogInfoKey IpAddress => new MyLogInfoKey(nameof(IpAddress));
+
+        private MyLogInfoKey(string name) : base(name) { }
     }
 }

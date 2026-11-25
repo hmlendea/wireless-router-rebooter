@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>WirelessRouterRebooter.ArchitectureTests</RootNamespace>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+    <PackageReference Include="NUnit" Version="5.0.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+    <PackageReference Include="TngTech.ArchUnitNET.NUnit" Version="0.13.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../WirelessRouterRebooter/WirelessRouterRebooter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../WirelessRouterRebooter/**/*.cs" Exclude="../WirelessRouterRebooter/bin/**/*.cs;../WirelessRouterRebooter/obj/**/*.cs">
+      <LogicalName>ProductionSources/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../WirelessRouterRebooter.UnitTests/**/*.cs" Exclude="../WirelessRouterRebooter.UnitTests/bin/**/*.cs;../WirelessRouterRebooter.UnitTests/obj/**/*.cs">
+      <LogicalName>UnitTestSources/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../WirelessRouterRebooter.slnx">
+      <LogicalName>ProjectFiles/WirelessRouterRebooter.slnx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../WirelessRouterRebooter/WirelessRouterRebooter.csproj">
+      <LogicalName>ProjectFiles/WirelessRouterRebooter/WirelessRouterRebooter.csproj</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../WirelessRouterRebooter.UnitTests/WirelessRouterRebooter.UnitTests.csproj">
+      <LogicalName>ProjectFiles/WirelessRouterRebooter.UnitTests/WirelessRouterRebooter.UnitTests.csproj</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="./**/*.cs" Exclude="./bin/**/*.cs;./obj/**/*.cs">
+      <LogicalName>ArchitectureTestSources/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

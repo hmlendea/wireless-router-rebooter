@@ -1,6 +1,8 @@
 using System;
+
 using NuciWeb;
 using NuciWeb.Automation;
+
 using WirelessRouterRebooter.Service.Models;
 
 namespace WirelessRouterRebooter.Service.Processors

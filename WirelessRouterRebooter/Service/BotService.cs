@@ -8,7 +8,7 @@ using WirelessRouterRebooter.Service.Processors;
 
 namespace WirelessRouterRebooter.Service
 {
-    public class BotService(
+    public sealed class BotService(
         IRouterProcessor routerProcessor,
         ILogger logger) : IBotService
     {
@@ -18,7 +18,7 @@ namespace WirelessRouterRebooter.Service
             Reboot();
         }
 
-        void LogIn(RouterAccessInfo accessInfo)
+        private void LogIn(RouterAccessInfo accessInfo)
         {
             string ipAddress = accessInfo.GetIpAddressOrDefault(routerProcessor.IpAddress);
 
@@ -57,7 +57,7 @@ namespace WirelessRouterRebooter.Service
             }
         }
 
-        void Reboot()
+        private void Reboot()
         {
             logger.Info(
                 MyOperation.Reboot,
