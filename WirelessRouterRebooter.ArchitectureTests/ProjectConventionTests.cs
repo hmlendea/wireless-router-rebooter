@@ -65,10 +65,11 @@ namespace WirelessRouterRebooter.ArchitectureTests
                 .Select(project => project.Attribute("Path")?.Value ?? string.Empty)
                 .ToArray();
 
-            Assert.That(paths, Has.Length.EqualTo(3));
+            Assert.That(paths, Has.Length.EqualTo(4));
             Assert.That(paths[0], Does.Contain("WirelessRouterRebooter.csproj"));
             Assert.That(paths[1], Does.Contain("UnitTests.csproj"));
             Assert.That(paths[2], Does.Contain("ArchitectureTests.csproj"));
+            Assert.That(paths[3], Does.Contain("IntegrationTests.csproj"));
             Assert.That(paths.Any(path => path.Contains("/src/", StringComparison.Ordinal)), Is.False);
         }
     }
