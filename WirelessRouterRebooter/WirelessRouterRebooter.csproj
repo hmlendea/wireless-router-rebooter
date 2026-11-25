@@ -5,6 +5,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>WirelessRouterRebooter</RootNamespace>
     <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

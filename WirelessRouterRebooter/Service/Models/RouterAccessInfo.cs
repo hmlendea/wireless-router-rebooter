@@ -9,8 +9,15 @@ namespace WirelessRouterRebooter.Service.Models
         public string IpAddress { get; set; }
 
         public string GetIpAddressOrDefault(string defaultIpAddress)
-            => string.IsNullOrWhiteSpace(IpAddress)
-                ? defaultIpAddress
-                : IpAddress;
+        {
+            string ipAddress = defaultIpAddress;
+
+            if (!string.IsNullOrWhiteSpace(IpAddress))
+            {
+                ipAddress = IpAddress;
+            }
+
+            return ipAddress;
+        }
     }
 }

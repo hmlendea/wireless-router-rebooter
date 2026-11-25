@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,14 +22,14 @@ namespace WirelessRouterRebooter
 {
     public sealed class Program
     {
-        static BotSettings botSettings;
-        static DebugSettings debugSettings;
-        static NuciLoggerSettings loggingSettings;
-        static IWebDriver webDriver;
+        private static BotSettings botSettings;
+        private static DebugSettings debugSettings;
+        private static NuciLoggerSettings loggingSettings;
+        private static IWebDriver webDriver;
 
-        static ILogger logger;
+        private static ILogger logger;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             botSettings = new BotSettings();
             debugSettings = new DebugSettings();
@@ -66,7 +67,7 @@ namespace WirelessRouterRebooter
             Run(serviceProvider, accessInfo);
         }
 
-        static ArgumentsCollection ParseArguments(string[] args)
+        private static ArgumentsCollection ParseArguments(string[] args)
         {
             ArgumentParser argumentsParser = new();
             argumentsParser.AddArgument("username", "The username for the router login", false, "admin");
@@ -77,7 +78,7 @@ namespace WirelessRouterRebooter
             return argumentsParser.ParseArgs(args);
         }
 
-        static string ParseDeviceArgument(ArgumentsCollection arguments)
+        private static string ParseDeviceArgument(ArgumentsCollection arguments)
         {
             string device = arguments.Get<string>("router").ToLowerInvariant();
 
@@ -91,46 +92,45 @@ namespace WirelessRouterRebooter
             return device;
         }
 
-        static RouterAccessInfo RetrieveAccessInfo(ArgumentsCollection arguments)
+        private static RouterAccessInfo RetrieveAccessInfo(ArgumentsCollection arguments) => new()
         {
-            return new RouterAccessInfo
+            Username = arguments.Get<string>("username"),
+            Password = arguments.Get<string>("password"),
+            IpAddress = arguments.Get<string>("ip")
+        };
+
+        private static void Run(IServiceProvider serviceProvider, RouterAccessInfo accessInfo)
+        {
+            IBotService botService = serviceProvider.GetService<IBotService>();
+
+            try
             {
-                Username = arguments.Get<string>("username"),
-                Password = arguments.Get<string>("password"),
-                IpAddress = arguments.Get<string>("ip")
-            };
-        }
-
-        static void Run(IServiceProvider serviceProvider, RouterAccessInfo accessInfo)
+                botService.Run(accessInfo);
+            }
+            catch (AggregateException ex)
             {
-                IBotService botService = serviceProvider.GetService<IBotService>();
-
-                try
+                foreach (Exception innerException in ex.InnerExceptions)
                 {
-                    botService.Run(accessInfo);
-                }
-                catch (AggregateException ex)
-                {
-                    foreach (Exception innerException in ex.InnerExceptions)
-                    {
-                        logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
-                    }
-                    SaveCrashScreenshot();
-                }
-                catch (Exception ex)
-                {
-                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
-                    SaveCrashScreenshot();
+                    logger.Fatal(Operation.Unknown, OperationStatus.Failure, innerException);
                 }
 
-                webDriver.Quit();
+                SaveCrashScreenshot();
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(Operation.Unknown, OperationStatus.Failure, ex);
+
+                SaveCrashScreenshot();
             }
 
-        static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
+            webDriver.Quit();
+        }
+
+        private static IConfiguration LoadConfiguration() => new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", true, true)
             .Build();
 
-        static void SaveCrashScreenshot()
+        private static void SaveCrashScreenshot()
         {
             if (!debugSettings.IsCrashScreenshotEnabled)
             {

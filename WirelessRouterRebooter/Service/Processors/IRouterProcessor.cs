@@ -4,14 +4,14 @@ namespace WirelessRouterRebooter.Service.Processors
 {
     public interface IRouterProcessor
     {
-        string BrandName { get; }
+        public string BrandName { get; }
 
-        string ModelName { get; }
+        public string ModelName { get; }
 
-        string IpAddress { get; }
+        public string IpAddress { get; }
 
-        void LogIn(RouterAccessInfo accessInfo);
+        public void LogIn(RouterAccessInfo accessInfo);
 
-        void Reboot();
+        public void Reboot();
     }
 }

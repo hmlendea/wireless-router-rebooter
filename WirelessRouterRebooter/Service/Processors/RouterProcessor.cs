@@ -4,6 +4,12 @@ namespace WirelessRouterRebooter.Service.Processors
 {
     public abstract class RouterProcessor : IRouterProcessor
     {
+        public string BrandName { get; }
+
+        public string ModelName { get; }
+
+        public string IpAddress { get; }
+
         protected RouterProcessor(
             string brandName,
             string modelName,
@@ -12,16 +18,13 @@ namespace WirelessRouterRebooter.Service.Processors
         {
             BrandName = brandName;
             ModelName = modelName;
-            IpAddress = string.IsNullOrWhiteSpace(accessInfo?.IpAddress)
-                ? defaultIpAddress
-                : accessInfo.IpAddress;
+            IpAddress = defaultIpAddress;
+
+            if (!string.IsNullOrWhiteSpace(accessInfo?.IpAddress))
+            {
+                IpAddress = accessInfo.IpAddress;
+            }
         }
-
-        public string BrandName { get; }
-
-        public string ModelName { get; }
-
-        public string IpAddress { get; }
 
         public abstract void LogIn(RouterAccessInfo accessInfo);
 
