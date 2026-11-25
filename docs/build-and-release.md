@@ -205,7 +205,7 @@ No artifacts currently uploaded. Consider adding:
 | `NuciLog.Core` | 3.1.2 | Logging core |
 | `NuciWeb` | 4.1.0 | Web automation core |
 | `NuciWeb.Automation` | 1.0.1 | Automation abstraction |
-| `NuciWeb.Automation.Selenium` | 1.0.4 | Selenium implementation |
+| `NuciWeb.Automation.Selenium` | 1.0.5 | Selenium implementation |
 
 ### Updating Dependencies
 
