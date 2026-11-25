@@ -2,4 +2,5 @@
   <Project Path="WirelessRouterRebooter/WirelessRouterRebooter.csproj" />
   <Project Path="WirelessRouterRebooter.UnitTests/WirelessRouterRebooter.UnitTests.csproj" />
   <Project Path="WirelessRouterRebooter.ArchitectureTests/WirelessRouterRebooter.ArchitectureTests.csproj" />
+  <Project Path="WirelessRouterRebooter.IntegrationTests/WirelessRouterRebooter.IntegrationTests.csproj" />
 </Solution>
